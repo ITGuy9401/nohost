@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "documentation-manager"
+  },
+  "targets": {
+    "documentation-manager": {
+      "hosting": {
+        "reader": [
+          "docs-reader"
+        ]
+      }
+    }
+  }
+}
