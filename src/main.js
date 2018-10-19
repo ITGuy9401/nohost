@@ -106,7 +106,7 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
         if (!option && (!window.location.pathname.startsWith("/index.html") && !window.location.pathname.startsWith(appDir + "/index.html"))) {
             let newurl = null;
             if (window.location.pathname.startsWith(appDir)) {
-                newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname.substring(appDir.length, window.location.pathname.length) + ".html";
+                newurl = window.location.protocol + "//" + window.location.host + "/" + appDir + "?" + window.location.pathname.substring(appDir.length, window.location.pathname.length) + ".html";
             } else {
                 newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname + ".html";
             }
