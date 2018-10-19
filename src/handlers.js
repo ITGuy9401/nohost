@@ -158,40 +158,6 @@ function(Filer, Async, Log, Content) {
                 callback();
             });
         },
-        function frames(callback) {
-            var elems = doc.querySelectorAll('frame');
-
-            Async.eachSeries(elems, function(elem, cb) {
-                // Skip any links for protocols (we only want relative paths)
-                var url = elem.getAttribute('src');
-                if(!url || /\:?\/\//.test(url) || /\s*data\:/.test(url)) {
-                    return cb();
-                }
-
-                var path = Path.resolve(dir, url);
-                fs.exists(path, function(found) {
-                    if(!found) {
-                        return cb();
-                    }
-
-                    _readFile(fs, path, 'utf8', function(err, data) {
-                        if(err) {
-                            return cb(err);
-                        }
-
-                        _processHTML(data, path, fs, function(err, html) {
-                            elem.src = Content.toDataURL(data, 'text/html');
-                            cb();
-                        });
-                    });
-                });
-            }, function(err) {
-                if(err) {
-                    Log.error(err);
-                }
-                callback();
-            });
-        },
       function inlineStyles(callback) {
         var elems = doc.querySelectorAll('style');
 
