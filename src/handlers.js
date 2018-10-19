@@ -75,7 +75,7 @@ define(['filer', 'async', 'log', 'content', 'domparser'],
             doc = parser.parseFromString(html, 'text/html');
 
             // Replace links with file contents from fs
-            const fs = [
+            var functions = [
                 function anchors(callback) {
                     var elems = doc.querySelectorAll('a');
                     var elem;
@@ -271,7 +271,7 @@ define(['filer', 'async', 'log', 'content', 'domparser'],
                 }
             ];
 
-            fs.forEach(f => f((err, result) => {
+            functions.forEach(f => f((err, result) => {
                 console.log(err, result);
                 // Return the processed HTML
                 callback(null, doc.documentElement.innerHTML);
