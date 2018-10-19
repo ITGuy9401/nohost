@@ -70,6 +70,8 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
         var option = bootOption[0];
         var value = bootOption.splice(1, bootOption.length - 1).join("=");
 
+        const appDir = "/nohost";
+
         console.log(document.location.pathname, bootOption, option, value);
 
         // If the DOM isn't ready, wait for it so document.write works fully
@@ -101,8 +103,13 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
             return;
         }
 
-        if (!option && !window.location.pathname.startsWith("/index.html")) {
-            let newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname + ".html";
+        if (!option && (!window.location.pathname.startsWith("/index.html") && !window.location.pathname.startsWith(appDir + "/index.html"))) {
+            let newurl = null;
+            if (window.location.pathname.startsWith(appDir)) {
+                newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname.substring(appDir.length, window.location.pathname.length) + ".html";
+            } else {
+                newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname + ".html";
+            }
             console.log("new url", newurl);
             window.location.href = newurl;
             return;
