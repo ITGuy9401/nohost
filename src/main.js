@@ -12,6 +12,7 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
     var Path = Filer.Path;
 
     function install(file) {
+        WebServer.reset();
         var status = document.getElementById('status');
         status.innerHTML = "Downloading zip file...";
         status.style.display = 'block';
