@@ -16,14 +16,10 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
         status.innerHTML = "Downloading zip file...";
         status.style.display = 'block';
 
-        console.log("Downloading zip file...");
-
         WebServer.download(file, function (err, path) {
-            console.log("downloaded");
             if (err) {
                 status.className = "alert alert-danger";
                 status.innerHTML = "Error downloading zip file!";
-                console.error("Error downloading zip file!", err);
                 return;
             }
 
@@ -32,10 +28,9 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
                 if (err) {
                     status.className = "alert alert-danger";
                     status.innerHTML = "Error downloading zip file!";
-                    console.error("Error downloading zip file!", err);
                     return;
                 }
-                window.location = '/#/';
+                window.location = '?/';
             });
         });
     }
@@ -75,11 +70,7 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
         var option = bootOption[0];
         var value = bootOption.splice(1, bootOption.length - 1).join("=");
 
-        var path = document.location.hash.substring(1, document.location.hash.length);
-
-        console.log(path);
-
-        console.log(bootOption, option, value);
+        console.log(document.location.pathname, bootOption, option, value);
 
         // If the DOM isn't ready, wait for it so document.write works fully
         if (document.readyState !== 'complete') {
@@ -90,48 +81,37 @@ requirejs(['filer', 'webserver', 'xhr'], function (Filer, WebServer) {
         WebServer.start();
 
         // Case 1: no boot option, show server UI
-        if (!option && !path) {
-            showUI();
-            return;
-        }
+        // if (!option) {
+        //     showUI();
+        //     return;
+        // }
 
         // Case 2: boot command (i.e., doesn't start with a '/')
-
         if (option === 'reset') {
             WebServer.reset();
             showUI();
             return;
         }
-
         if (option === 'install') {
             install(value);
             return;
         }
-
         if (option === 'installr') {
             installr(value);
             return;
         }
 
-        if (option === 'path') {
-            WebServer.serve(value);
+        if (!option && !window.location.pathname.startsWith("/index.html")) {
+            let newurl = window.location.protocol + "//" + window.location.host + "/?" + window.location.pathname + ".html";
+            console.log("new url", newurl);
+            window.location.href = newurl;
             return;
         }
-
-        option = bootOption.join("=");
-
-        if (!document.location.pathname.startsWith("/index.html")) {
-            option = document.location.pathname + document.location.search ? document.location.search : "";
-        }
-
-        if (option.startsWith("#")) option = option.substring(1, option.length);
-
-        console.log(option);
 
         // Case 3: a path was given into the web root, try to serve it.
         // Strip any server added trailing slash (unless we have '/').
         var url = option === '/' ? option : option.replace(/\/$/, '');
-        WebServer.serve(path);
+        WebServer.serve(url);
     }
 
     boot();
